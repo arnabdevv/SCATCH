@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
-
-const uri = "mongodb+srv://arnab312:scatch@cluster1.vuai6h6.mongodb.net/";
+const config = require("config");
+const debug = require("debug")("development:mongoose");
 
 mongoose
-  .connect(uri)
+  .connect(`${config.get("MONGODB_URI")}`)
   .then(() => {
-    console.log("DB Connected...");
+    debug("DB Connected...");
   })
   .catch((err) => {
-    console.log(err);
+    debug(err);
   });
 
 module.exports = mongoose.connection;

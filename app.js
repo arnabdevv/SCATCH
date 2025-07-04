@@ -1,5 +1,6 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const debug = require("debug")("development:app");
 const db = require("./config/mongooseConnection");
 const path = require("path");
 
@@ -20,5 +21,5 @@ app.use("/users", usersRouter);
 app.use("/products", productsRouter);
 
 app.listen(3000, () => {
-  console.log("Backend Running...");
+  debug("Backend Running...");
 });

@@ -4,7 +4,6 @@ const ownerSchema = mongoose.Schema({
   fullName: String,
   email: String,
   password: String,
-  isAdmin: Boolean,
   products: {
     type: Array,
     default: [],
