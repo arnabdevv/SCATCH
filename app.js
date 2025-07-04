@@ -4,6 +4,8 @@ const debug = require("debug")("development:app");
 const db = require("./config/mongooseConnection");
 const path = require("path");
 
+require("dotenv").config();
+
 const ownersRouter = require("./routes/ownersRouter");
 const usersRouter = require("./routes/usersRouter");
 const productsRouter = require("./routes/productsRouter");
