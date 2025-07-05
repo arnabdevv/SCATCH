@@ -13,6 +13,8 @@ module.exports = async (req, res, next) => {
       .select("-password");
 
     req.user = user;
+
+    next();
   } catch (err) {
     req.flash("error", "something went wrong");
     res.redirect("/");

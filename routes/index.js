@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/shop", isLoggedin, (req, res) => {
-  res.render("shop");
+  res.render("shop", { products });
 });
 
 module.exports = router;
