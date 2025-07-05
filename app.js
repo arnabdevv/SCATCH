@@ -1,6 +1,8 @@
+// Main Express app entry point for Scatch e-commerce backend
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const debug = require("debug")("development:app");
+// MongoDB connection
 const db = require("./config/mongooseConnection");
 const path = require("path");
 const expressSession = require("express-session");
@@ -8,6 +10,7 @@ const flash = require("connect-flash");
 
 require("dotenv").config();
 
+// Routers
 const ownersRouter = require("./routes/ownersRouter");
 const usersRouter = require("./routes/usersRouter");
 const productsRouter = require("./routes/productsRouter");
@@ -35,6 +38,7 @@ app.use("/owners", ownersRouter);
 app.use("/users", usersRouter);
 app.use("/products", productsRouter);
 
+// Start server
 app.listen(3000, () => {
   debug("Backend Running...");
 });

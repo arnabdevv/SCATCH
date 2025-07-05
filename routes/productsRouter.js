@@ -1,8 +1,10 @@
+// Product creation routes
 const express = require("express");
-const upload = require("../config/multerConfig");
-const productModel = require("../models/productModel");
+const upload = require("../config/multerConfig"); // Multer config for file upload
+const productModel = require("../models/productModel"); // Product model
 const router = express.Router();
 
+// Create new product (owner only)
 router.post("/create", upload.single("image"), async (req, res) => {
   try {
     let { name, price, discount, bgColor, panelColor, textColor } = req.body;

@@ -1,7 +1,9 @@
+// Controller for user authentication (register, login, logout)
 const bcrypt = require("bcrypt");
 const userModel = require("../models/userModel");
 const { generateToken } = require("../utils/generateToken");
 
+// Register a new user
 module.exports.registerUser = async (req, res) => {
   try {
     let { email, password, fullname } = req.body;
@@ -36,15 +38,14 @@ module.exports.registerUser = async (req, res) => {
   }
 };
 
+// Login user
 module.exports.loginUser = async (req, res) => {
   let { email, password } = req.body;
-
   let user = await userModel.findOne({ email: email });
   if (!user) {
     req.flash("error", "Email or password incorrect");
     return res.redirect("/");
   }
-
   bcrypt.compare(password, user.password, (err, result) => {
     if (result) {
       let token = generateToken(user);
@@ -58,6 +59,7 @@ module.exports.loginUser = async (req, res) => {
   });
 };
 
+// Logout user
 module.exports.logout = (req, res) => {
   res.cookie("token", "");
   res.redirect("/");

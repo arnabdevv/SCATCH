@@ -1,11 +1,11 @@
+// Mongoose schema for User
 const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({
-  fullName: String,
-  email: String,
-  password: String,
+  fullName: String, // User's full name
+  email: String, // Email address
+  password: String, // Password (hashed)
   cart: {
-    type: Array,
     type: Array,
     default: [],
   },
@@ -13,8 +13,8 @@ const userSchema = mongoose.Schema({
     type: Array,
     default: [],
   },
-  contact: Number,
-  picture: String,
+  contact: Number, // Contact number
+  picture: String, // Profile picture URL
 });
 
 module.exports = mongoose.model("user", userSchema);

@@ -1,3 +1,4 @@
+// Middleware to check if user is logged in (JWT auth)
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/userModel");
 
@@ -11,9 +12,7 @@ module.exports = async (req, res, next) => {
     let user = await userModel
       .findOne({ email: decoded.email })
       .select("-password");
-
     req.user = user;
-
     next();
   } catch (err) {
     req.flash("error", "something went wrong");

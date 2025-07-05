@@ -1,3 +1,4 @@
+// Utility to generate JWT token for a user
 const jwt = require("jsonwebtoken");
 
 const generateToken = (user) => {
