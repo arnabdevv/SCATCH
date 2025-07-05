@@ -1,0 +1,92 @@
+# Bugs & Vulnerabilities in Scatch Project
+
+## 1. Password Storage (Owners)
+- Owner passwords are stored in plaintext (see `ownersModel.js` and owner creation route). This is a critical security vulnerability. Passwords must be hashed before saving.
+
+## 2. User Input Validation
+- There is little to no validation or sanitization of user input (e.g., registration, login, product creation). This can lead to injection attacks, malformed data, and application errors.
+
+## 3. JWT Secret Exposure
+- The JWT secret is loaded from environment variables, but if not set, the app may fail or use an insecure default. There is no fallback or error handling for missing secrets.
+
+## 4. Session Security
+- The `express-session` secret is loaded from environment variables, but there is no check for its presence. If not set, sessions may be insecure.
+
+## 5. File Upload Handling
+- Product images are uploaded and stored as buffers in MongoDB. There is no file type or size validation, which could allow malicious files to be uploaded and stored.
+
+## 6. Owner Creation Route (Development Only)
+- The `/owners/create` route is only available in development, but if NODE_ENV is misconfigured, it could be exposed in production, allowing anyone to create an owner account.
+
+## 7. No Rate Limiting
+- There is no rate limiting on authentication or product creation routes, making the app vulnerable to brute-force and DoS attacks.
+
+## 8. Error Handling
+- Many routes simply send error messages to the client, sometimes exposing internal error details. This can leak sensitive information.
+
+## 9. No CSRF Protection
+- The app does not implement CSRF protection, making it vulnerable to cross-site request forgery attacks.
+
+## 10. Insecure Cookie Settings
+- JWT tokens are set in cookies, but there is no `httpOnly`, `secure`, or `sameSite` flag set, making them vulnerable to XSS and CSRF attacks.
+
+## 11. Authorization Checks
+- There is no authorization logic to ensure only owners/admins can create products. Any authenticated user could potentially access product creation endpoints.
+
+## 12. Duplicate User Registration
+- There is a check for existing users by email, but no unique index on the email field in the database, which could allow race conditions and duplicate accounts.
+
+## 13. Hardcoded MongoDB URI
+- The MongoDB URI is stored in `config/development.json` and may be committed to version control, exposing database credentials.
+
+## 14. Flash Message Overuse
+- Flash messages are used for all errors and successes, but not all errors are user-facing. Some should be logged instead.
+
+---
+
+
+---
+
+# Solutions to Bugs & Vulnerabilities
+
+## 1. Password Storage (Owners)
+- Use bcrypt to hash owner passwords before saving to the database, just like user passwords. Never store plaintext passwords.
+
+## 2. User Input Validation
+- Use libraries like `express-validator` or `joi` to validate and sanitize all incoming data for registration, login, and product creation.
+
+## 3. JWT Secret Exposure
+- Always check that `process.env.JWT_KEY` is set before starting the app. Exit with an error if not set. Never use a default or hardcoded secret.
+
+## 4. Session Security
+- Check that `process.env.EXPRESS_SESSION_SECRET` is set. Use strong, random secrets. Set session cookie options: `httpOnly`, `secure`, and `sameSite`.
+
+## 5. File Upload Handling
+- Validate file type (e.g., only allow images) and limit file size in the multer config. Reject files that do not meet criteria.
+
+## 6. Owner Creation Route (Development Only)
+- Double-check `NODE_ENV` before exposing sensitive routes. Consider removing the route entirely after initial setup, or protect it with an additional secret or admin check.
+
+## 7. No Rate Limiting
+- Use middleware like `express-rate-limit` to limit requests to authentication and product creation endpoints.
+
+## 8. Error Handling
+- Do not send raw error messages to the client. Log errors on the server and show generic messages to users.
+
+## 9. No CSRF Protection
+- Use the `csurf` middleware to protect all POST/PUT/DELETE routes from CSRF attacks.
+
+## 10. Insecure Cookie Settings
+- When setting cookies, use `{ httpOnly: true, secure: true, sameSite: 'strict' }` for all authentication tokens.
+
+## 11. Authorization Checks
+- Add middleware to check user roles (owner/admin) before allowing product creation or other sensitive actions.
+
+## 12. Duplicate User Registration
+- Add a unique index to the `email` field in the user schema. Handle duplicate key errors gracefully.
+
+## 13. Hardcoded MongoDB URI
+- Use environment variables for all secrets and connection strings. Never commit credentials to version control.
+
+## 14. Flash Message Overuse
+- Only use flash messages for user-facing notifications. Log technical errors to a file or monitoring service instead.
