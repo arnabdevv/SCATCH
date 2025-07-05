@@ -1,3 +1,4 @@
 .env
 node_modules/
-cmd
+cmd.txt
+BUGS_AND_VULNERABILITIES.txt
