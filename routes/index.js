@@ -6,12 +6,12 @@ const router = express.Router();
 
 router.get("/", (req, res) => {
   let error = req.flash("error");
-  res.render("index", { error });
+  res.render("index", { error, isLoggedin: false });
 });
 
 router.get("/shop", isLoggedin, async (req, res) => {
   let products = await productModel.find();
-  res.render("shop", { products });
+  res.render("shop", { products, isLoggedin: true });
 });
 
 module.exports = router;
